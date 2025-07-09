@@ -14,8 +14,9 @@ const Home = () => {
   };
   return (
     <View>
-      <View style={{display:"flex", alignItems:"center", justifyContent:"center", margin:"auto", width:200, height:300, padding:30} }>
-        <Button title="Test" onPress={ft_test}></Button>
+      <View style={{display:"flex", alignItems:"center", justifyContent:"center", margin:"auto", width:200, height:300, padding:30, flexDirection:"column", gap:20} }>
+        <Button title="Ferme forte" onPress={ft_test}></Button>
+        <Button title="Allume lampe" onPress={ft_test}></Button>
       </View>
     </View>
   );
