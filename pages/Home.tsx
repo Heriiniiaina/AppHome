@@ -6,9 +6,10 @@ type Props = {
 }
 const Home = () => {
   const serveur = "http://192.168.107.6:8000";
-  const ft_test = async (name:string) => {
+  const ft_test = async (name:string, isOpen?:boolean) => {
     try {
       await axios.post(`${serveur}/${name}`);
+      isOpen = !isOpen
       console.log("test envoye");
     } catch (error) {
       console.log(error);
