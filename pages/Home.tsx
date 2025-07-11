@@ -6,7 +6,7 @@ type Props = {
   name:string
 }
 const Home = () => {
-  const serveur = "http://192.168.107.6:8000";
+  const serveur = "http://192.168.42.248:8000";
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const ft_test = async (name:string, isOpen?:boolean) => {
     try {
@@ -25,7 +25,7 @@ const Home = () => {
         {/* <BtnTeste ft_test={ft_test} isOpen={isOpen} numeroPorte={1}/> */}
         <PorteAnimation cadre="OpenCadreVitrePortePpl1.002" vitre="OpenVitrePortePpl1.002" numeroPorte={1}/>
         <PorteAnimation cadre="OpenCadreVitrePortePpl1.003" vitre="OpenVitrePortePpl1.003" numeroPorte={2}/>
-            <PorteAnimation cadre="OpenCadreVitrePortePpl2.002" vitre="OpenVitrePortePpl2.002" numeroPorte={3}/>
+          <PorteAnimation cadre="OpenCadreVitrePortePpl2.002" vitre="OpenVitrePortePpl2.002" numeroPorte={3}/>
         <PorteAnimation cadre="OpenCadreVitrePortePpl2.003" vitre="OpenVitrePortePpl2.003" numeroPorte={4}/>
       </View>
     </View>
