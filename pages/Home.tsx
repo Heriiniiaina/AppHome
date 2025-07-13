@@ -6,7 +6,7 @@ type Props = {
   name:string
 }
 const Home = () => {
-  const serveur = "http://192.168.42.248:8000";
+  const serveur = "192.168.42.238:8000";
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const ft_test = async (name:string, isOpen?:boolean) => {
     try {

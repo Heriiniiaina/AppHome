@@ -51,7 +51,7 @@ export default function AuthButtons({
         Alert.alert("Erreur", "Authentification échouée")
       }
     } catch (e:any) {
-      Alert.alert("Erreur", `Erreur: ${e.message}`);
+      Alert.alert("Erreur", `Erreur: ${e.message}`)
     }
   }
   if (!isBioSupporte) {
@@ -59,7 +59,7 @@ export default function AuthButtons({
       <View style={styles.container}>
         <Text>aucun capteur </Text>
       </View>
-    );
+    )
   }
   return (
     <View style={styles.container}>
