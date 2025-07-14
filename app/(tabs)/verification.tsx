@@ -8,10 +8,7 @@ const nom = useSelector((state: any) => state.auth.nom);
 console.log(nom)
   return (
  
-   
-         <FaceAuthScreen/>
-    
- 
+         <FaceAuthScreen nom={nom}/>
   )
 }
 

@@ -1,41 +1,54 @@
 import axios from 'axios';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Button,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 
-export default function FaceAuthScreen() {
-  const [image1, setImage1] = useState(null); 
-  const [image2, setImage2] = useState(null); 
+type Props = {
+  nom:string
+}
+export default function FaceAuthScreen({nom}:Props) {
+  const [image1, setImage1] = useState(null);
+  const [referenceImageName, setReferenceImageName] = useState(`${nom}.jpg`);
   const [score, setScore] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const pickImage = async (setImage) => {
+  const pickImage = async () => {
     const result = await ImagePicker.launchCameraAsync({ base64: false });
 
     if (!result.canceled) {
       const manipulatedImage = await ImageManipulator.manipulateAsync(
         result.assets[0].uri,
-        [{ resize: { width: 400 } }], // Redimensionner à 400px de large
-        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG } // Compresser à 70%
+        [{ resize: { width: 400 } }],
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
       );
-      setImage(manipulatedImage);
+      setImage1(manipulatedImage);
+
+      // Appel direct à compare après avoir obtenu l’image
+      await compare(manipulatedImage);
     }
   };
 
-  const compare = async () => {
+  const compare = async (image) => {
+    setLoading(true); // Afficher le loader
+
     const formData = new FormData();
 
     formData.append('image1', {
-      uri: image1.uri,
+      uri: image.uri,
       name: 'image1.jpg',
       type: 'image/jpeg',
     });
 
-    formData.append('image2', {
-      uri: image2.uri,
-      name: 'image2.jpg',
-      type: 'image/jpeg',
-    });
+    formData.append('image2_name', referenceImageName);
 
     try {
       const res = await axios.post('http://192.168.43.199:8001/compare', formData, {
@@ -48,23 +61,44 @@ export default function FaceAuthScreen() {
       setScore(confidence);
     } catch (err) {
       console.error('Erreur de comparaison :', err);
+    } finally {
+      setLoading(false); // Masquer le loader même en cas d'erreur
     }
   };
 
+  useEffect(() => {
+    if (score !== null) {
+      const timeout = setTimeout(() => {
+        if (score >= 60) {
+          router.push('/home');
+        } else {
+          router.push('/verification');
+        }
+      }, 500);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [score]);
+
   return (
     <View style={styles.container}>
-      <Button title="Photo 1" onPress={() => pickImage(setImage1)} />
-      <Button title="Photo 2" onPress={() => pickImage(setImage2)} />
+      {loading ? (
+        <>
+          <ActivityIndicator size="large" color="#007AFF" />
+          <Text style={{ marginTop: 10 }}>Vérification en cours...</Text>
+        </>
+      ) : (
+        <>
+          <Button title="Prendre une photo" onPress={pickImage} />
 
-      {image1 && <Image source={{ uri: image1.uri }} style={styles.image} />}
-      {image2 && <Image source={{ uri: image2.uri }} style={styles.image} />}
+         
 
-      <Button title="Comparer" onPress={compare} />
-
-      {score !== null && (
-        <Text style={{ marginTop: 20, fontSize: 18 }}>
-          Score : {score} % {score >= 60 ? 'ok' : 'non'}
-        </Text>
+          {score !== null && (
+            <Text style={{ marginTop: 20, fontSize: 18 }}>
+             
+            </Text>
+          )}
+        </>
       )}
     </View>
   );
@@ -81,5 +115,13 @@ const styles = StyleSheet.create({
     height: 120,
     marginVertical: 10,
     borderRadius: 10,
+  },
+  input: {
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: '#aaa',
+    padding: 8,
+    width: '80%',
+    borderRadius: 5,
   },
 });
