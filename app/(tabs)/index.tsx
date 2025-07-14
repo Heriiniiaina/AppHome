@@ -1,5 +1,4 @@
-import AuthButtons from "@/pages/AuthBtn";
-import FaceAuthScreen from "@/pages/FaceId";
+import Form from "@/pages/Form";
 import { useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -10,7 +9,8 @@ export default function HomeScreenWrapper() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
-         {  isAuthenticated ?  <FaceAuthScreen /> : <AuthButtons isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/> }  
+       {/*{  isAuthenticated ?  <FaceAuthScreen /> : <AuthButtons isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/> } */}    
+       <Form/>
       </SafeAreaView>
     </SafeAreaProvider>
   );

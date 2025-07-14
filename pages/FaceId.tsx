@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { Button, Image, StyleSheet, Text, View } from 'react-native';
@@ -10,7 +11,15 @@ export default function FaceAuthScreen() {
 
   const pickImage = async (setImage) => {
     const result = await ImagePicker.launchCameraAsync({ base64: false });
-    if (!result.canceled) setImage(result.assets[0]);
+
+    if (!result.canceled) {
+      const manipulatedImage = await ImageManipulator.manipulateAsync(
+        result.assets[0].uri,
+        [{ resize: { width: 400 } }], // Redimensionner à 400px de large
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG } // Compresser à 70%
+      );
+      setImage(manipulatedImage);
+    }
   };
 
   const compare = async () => {
@@ -29,8 +38,7 @@ export default function FaceAuthScreen() {
     });
 
     try {
-        console.log(formData['image1'])
-      const res = await axios.post('http://192.168.42.99:8001/compare', formData, {
+      const res = await axios.post('http://192.168.43.199:8001/compare', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -45,8 +53,8 @@ export default function FaceAuthScreen() {
 
   return (
     <View style={styles.container}>
-      <Button title="photo 1" onPress={() => pickImage(setImage1)} />
-      <Button title="photo 2" onPress={() => pickImage(setImage2)} />
+      <Button title="Photo 1" onPress={() => pickImage(setImage1)} />
+      <Button title="Photo 2" onPress={() => pickImage(setImage2)} />
 
       {image1 && <Image source={{ uri: image1.uri }} style={styles.image} />}
       {image2 && <Image source={{ uri: image2.uri }} style={styles.image} />}
@@ -55,7 +63,7 @@ export default function FaceAuthScreen() {
 
       {score !== null && (
         <Text style={{ marginTop: 20, fontSize: 18 }}>
-          Score : {score} % {score >= 50 ? 'ok' : 'nom'}
+          Score : {score} % {score >= 60 ? 'ok' : 'non'}
         </Text>
       )}
     </View>
