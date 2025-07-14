@@ -1,9 +1,17 @@
-import FaceAuthScreen from '@/pages/FaceId'
-import React from 'react'
+import FaceAuthScreen from '@/pages/FaceId';
+import { useSelector } from 'react-redux';
 
-const auth = ({nom}:string) => {
+const auth = () => {
+  
+const nom = useSelector((state: any) => state.auth.nom);
+
+console.log(nom)
   return (
-    <FaceAuthScreen/>
+ 
+   
+         <FaceAuthScreen/>
+    
+ 
   )
 }
 

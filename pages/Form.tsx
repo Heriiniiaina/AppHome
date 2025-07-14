@@ -1,11 +1,16 @@
+import { setNome } from '@/store/dataSlice';
 import { Picker } from '@react-native-picker/picker';
-import React, { useState } from 'react';
+import { router } from 'expo-router';
+import { useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 
 export default function Form() {
   const [selectedLang, setSelectedLang] = useState('');
-    const valid = ()=>{
-        
+  const dispatch = useDispatch()  
+  const valid = ()=>{
+        dispatch(setNome(selectedLang))
+       router.push("/verification")
     }
   return (
     <View style={styles.container}>
@@ -27,7 +32,7 @@ export default function Form() {
       )}
       {
         
-        selectedLang != "" ?    <Button title='Valider' onPress={}/> : null
+        selectedLang != "" ?    <Button title='Valider' onPress={valid}/> : null
       }
     </View>
   );
